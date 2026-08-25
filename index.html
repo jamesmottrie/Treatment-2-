@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Cure" />
+<meta name="theme-color" content="#1A262E" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="apple-touch-startup-image" href="splash-1179x2556.png" media="(device-width:393px) and (device-height:852px) and (-webkit-device-pixel-ratio:3)" />
+<link rel="apple-touch-startup-image" href="splash-1290x2796.png" media="(device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3)" />
+<link rel="apple-touch-startup-image" href="splash-1284x2778.png" media="(device-width:428px) and (device-height:926px) and (-webkit-device-pixel-ratio:3)" />
+<link rel="apple-touch-startup-image" href="splash-1170x2532.png" media="(device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3)" />
+<title>Cure</title>
+<style>
+:root{
+  --bg:#F0F2F1;--card:#fff;--ink:#1A262E;--teal:#2A9D8F;--tealSoft:#E1F0EE;
+  --amber:#E9A848;--amberSoft:#FBF0DE;--muted:#78878F;--line:#DDE4E3;
+  --red:#C4553D;--redSoft:#F9E7E3;--lock:#8B95A1;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  padding:max(14px,env(safe-area-inset-top)) 14px calc(40px + env(safe-area-inset-bottom));
+  max-width:540px;margin:0 auto;min-height:100vh;touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;overscroll-behavior-y:contain}
+input,textarea{-webkit-user-select:text;user-select:text;font-size:16px}
+button{font-family:inherit;cursor:pointer;font-size:inherit}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.kicker{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--teal);font-weight:700}
+h1{font-size:22px;margin:1px 0 0;font-weight:700;letter-spacing:-.4px}
+.iconBtn{background:var(--card);border:1px solid var(--line);border-radius:11px;width:38px;height:38px;font-size:16px;color:var(--muted);flex:0 0 auto}
+
+/* tabs */
+.tabs{display:flex;gap:4px;background:#E3E7E6;border-radius:12px;padding:3px;margin-top:14px}
+.tab{flex:1;padding:9px 0;border:none;background:transparent;border-radius:9px;font-size:12.5px;font-weight:650;color:var(--muted)}
+.tab.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+
+.dateNav{display:flex;align-items:center;gap:6px;margin-top:12px}
+.navBtn{flex:0 0 40px;height:42px;font-size:21px;background:var(--card);border:1px solid var(--line);border-radius:11px;color:var(--teal)}
+.dateLabel{flex:1;height:42px;background:var(--card);border:1px solid var(--line);border-radius:11px;font-size:13px;font-weight:650;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:6px;text-transform:capitalize;overflow:hidden}
+.pill{font-size:9px;padding:2px 6px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.pillToday{background:var(--tealSoft);color:var(--teal)}
+.pillPast{background:var(--amberSoft);color:#8A5F1C}
+.pillFut{background:#E9ECEB;color:var(--muted)}
+
+.bar{display:flex;align-items:center;gap:9px;margin:12px 2px 10px}
+.barTrack{flex:1;height:8px;background:var(--line);border-radius:20px;overflow:hidden}
+.barFill{height:100%;background:var(--teal);border-radius:20px;transition:width .25s}
+.barTxt{font-size:12px;font-weight:700;color:var(--teal);min-width:78px;text-align:right}
+
+.catchup{background:var(--amberSoft);border:1px solid #EFD9B4;border-radius:13px;padding:11px 12px;margin-bottom:10px}
+.catchupTitle{font-size:12px;font-weight:700;color:#8A5F1C}
+.catchupDays{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cDay{background:#fff;border:1px solid #EFD9B4;border-radius:9px;padding:6px 9px;font-size:11px;font-weight:650;color:#8A5F1C}
+
+.groupTitle{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin:15px 2px 7px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px}
+.card.off{opacity:.55}
+.card.locked{background:#F6F7F7}
+.cardTop{display:flex;gap:9px;align-items:flex-start}
+.no{flex:0 0 24px;height:24px;border-radius:7px;background:var(--bg);color:var(--muted);font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line)}
+.no.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.no.fin{background:var(--amberSoft);color:#8A5F1C;border-color:#EFD9B4}
+.cardName{font-size:13.5px;font-weight:650;line-height:1.28}
+.cardSub{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.35}
+.tag{font-style:italic}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.badge{font-size:10px;font-weight:650;padding:2.5px 7px;border-radius:20px;background:var(--tealSoft);color:var(--teal)}
+.badge.g{background:#EEF1F0;color:var(--muted)}
+.badge.a{background:var(--amberSoft);color:#8A5F1C}
+.badge.r{background:var(--redSoft);color:var(--red)}
+.badge.d{background:var(--ink);color:#fff}
+.menuBtn{margin-left:auto;flex:0 0 28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:14px;line-height:1}
+.doses{display:flex;gap:6px;margin-top:10px}
+.dose{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:9px 2px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:11.5px;font-weight:650;color:var(--muted);text-transform:capitalize}
+.dose.on{background:var(--tealSoft);border-color:var(--teal);color:var(--teal)}
+.dose:active{transform:scale(.97)}
+.dose[disabled]{opacity:.45}
+.doseQty{font-size:9.5px;font-weight:600;text-transform:none;opacity:.8}
+.box{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:800}
+.dose.on .box{background:var(--teal);border-color:var(--teal)}
+.startBtn{width:100%;margin-top:10px;padding:10px 0;border-radius:10px;border:1px dashed var(--teal);background:var(--tealSoft);color:var(--teal);font-weight:700;font-size:12px}
+.lockBox{margin-top:10px;padding:10px;border-radius:10px;background:#EDEFEF;border:1px solid var(--line);font-size:11.5px;color:var(--lock);text-align:center;font-weight:600}
+.itemBar{height:5px;background:var(--line);border-radius:20px;overflow:hidden;margin-top:9px}
+.itemBarFill{height:100%;background:var(--teal);border-radius:20px}
+.dailyTot{font-size:10.5px;color:var(--muted);margin-top:8px;text-align:center;font-weight:600}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:22px 16px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.6}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 12px}
+.kpi.dark{background:var(--ink);border-color:var(--ink)}
+.kpiLabel{font-size:9.5px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi.dark .kpiLabel{color:#8FA3AC}
+.kpiVal{font-size:24px;font-weight:800;letter-spacing:-1px;margin-top:3px;line-height:1}
+.kpi.dark .kpiVal{color:var(--amber)}
+.kpiSub{font-size:10px;color:var(--muted);margin-top:3px}
+.kpi.dark .kpiSub{color:#8FA3AC}
+.spark{display:flex;align-items:flex-end;gap:3px;height:26px;margin-top:6px}
+.sparkBar{flex:1;border-radius:2px;min-height:2px;background:var(--line)}
+.sparkBar.f{background:var(--teal)}
+.sparkBar.p{background:var(--amber)}
+.listBox{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-top:9px}
+.statRow{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12.5px}
+.statRow:last-child{border-bottom:none}
+.statName{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.statVal{font-weight:700}
+.sectionTitle{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 2px 0}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(20,30,36,.45);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sheet{background:var(--bg);width:100%;max-width:540px;border-radius:20px 20px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto}
+.sheetTitle{font-size:15.5px;font-weight:700;line-height:1.3}
+.sheetSub{font-size:11.5px;color:var(--muted);margin-top:4px}
+.row{display:flex;flex-direction:column;gap:7px;margin-top:15px}
+.rowLabel{font-size:12px;font-weight:650}
+input[type=date]{padding:11px 12px;border:1px solid var(--line);border-radius:11px;font-family:inherit;background:var(--card);color:var(--ink);width:100%}
+.btn{padding:12px;border-radius:11px;border:1px solid var(--line);background:var(--card);font-size:12.5px;font-weight:650;color:var(--ink);width:100%}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.danger{background:var(--redSoft);border-color:#EBC9C0;color:var(--red)}
+.btn.ghost{background:transparent}
+.btn[disabled]{opacity:.45}
+.btnRow{display:flex;gap:8px}.btnRow .btn{flex:1}
+.hint{font-size:10.5px;color:var(--muted);line-height:1.5}
+.seg{display:flex;gap:7px}
+.segBtn{flex:1;padding:10px 0;border:1px solid var(--line);border-radius:11px;background:var(--card);font-size:12px;font-weight:650;color:var(--muted)}
+.segBtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.phaseRow{display:flex;align-items:center;gap:9px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:11.5px}
+.phaseRow:last-child{border-bottom:none}
+.phaseRow.now{background:var(--tealSoft)}
+.phaseRow.past{opacity:.5}
+.phaseNum{flex:0 0 19px;height:19px;border-radius:6px;background:var(--bg);color:var(--muted);font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center}
+.phaseRow.now .phaseNum{background:var(--teal);color:#fff}
+.phaseTxt{flex:1}
+.phaseDur{color:var(--muted);font-size:10.5px;white-space:nowrap}
+footer{margin-top:20px;font-size:10px;color:var(--muted);text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header>
+  <div><div class="kicker">Cure · Dr de Pret · 25/08/26</div><h1>Mottrie James</h1></div>
+  <button class="iconBtn" id="gearBtn" aria-label="Réglages">⚙</button>
+</header>
+
+<div class="tabs">
+  <button class="tab" data-tab="jour">Aujourd'hui</button>
+  <button class="tab" data-tab="suivi">Suivi</button>
+  <button class="tab" data-tab="plan">Traitement</button>
+</div>
+
+<div id="view"></div>
+<div id="modal"></div>
+
+<script>
+if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
+/* ============ ORDONNANCE 25/08/26 ============
+ perDay = nombre de prises. per = ce qu'on prend a chaque prise.
+ daily  = total journalier affiche. days=null => sans fin prevue. */
+const ITEMS=[
+ {n:1,id:"lyso",group:"Sinus",name:"Lysomucyl 600 mg",sub:"",
+  phases:[{days:15,perDay:2,per:"1 sachet",daily:"2 sachets / jour",label:"1 matin + 1 midi",slots:["matin","midi"]}]},
+ {n:2,id:"inhal",group:"Sinus",name:"Inhalations HE",sub:"menthe poivrée · eucalyptus globuleux · lavande vraie",
+  phases:[{days:15,perDay:2,per:"1 inhalation",daily:"2 inhalations / jour",label:"2x / jour",slots:["matin","soir"]}]},
+ {n:3,id:"neti",group:"Sinus",name:"Pot neti",sub:"liquide physiologique · 1x par narine",
+  phases:[{days:15,perDay:2,per:"1 rinçage",daily:"2 rinçages / jour",label:"2x / jour",slots:["matin","soir"]}]},
+
+ {n:4,id:"mvb",group:"Général",name:"Multi Vita Boost (Nutrilogics)",sub:"soutien des mitochondries",
+  phases:[{days:30,perDay:2,per:"1 dose",daily:"2 doses / jour",label:"2x / jour",slots:["matin","soir"]},
+          {days:30,perDay:1,per:"1 dose",daily:"1 dose / jour",label:"1x / jour",slots:["jour"]}]},
+ {n:5,id:"pea",group:"Général",name:"PEA (Dynveo)",sub:"endocannabinoïde",
+  phases:[{days:60,perDay:3,per:"1 dose",daily:"3 doses / jour",label:"3x / jour",slots:["matin","midi","soir"]}]},
+ {n:6,id:"mag",group:"Général",name:"Magnevits Lepivits",sub:"",
+  phases:[{days:null,perDay:3,per:"1 dose",daily:"3 doses / jour",label:"3x / jour",slots:["matin","midi","soir"]}]},
+ {n:7,id:"api",group:"Général",name:"Apigenin 100 mg (Cupplement)",sub:"extrait de camomille",
+  phases:[{days:15,perDay:2,per:"2 comprimés",daily:"4 comprimés / jour",label:"2 comprimés · 2x / jour",slots:["matin","soir"]},
+          {days:null,perDay:1,per:"2 comprimés",daily:"2 comprimés / jour",label:"2 comprimés · 1x / jour",slots:["jour"],check:true}]},
+ {n:8,id:"dha",group:"Général",name:"DHA Forte (DEBA)",sub:"oméga-3 à tropisme cérébral",
+  phases:[{days:60,perDay:2,per:"1 dose",daily:"2 doses / jour",label:"2x / jour",slots:["matin","soir"]}]},
+
+ {n:9,id:"ldn",group:"Protocole LDN",name:"Naltrexone (LDN)",sub:"à débuter après 1 mois",delayDays:30,
+  phases:[{days:10,perDay:1,per:"1,5 mg",daily:"1,5 mg / jour",label:"1,5 mg · 1x / jour",slots:["jour"]},
+          {days:10,perDay:2,per:"1,5 mg",daily:"3 mg / jour",label:"1,5 mg · 2x / jour",slots:["matin","soir"]},
+          {days:60,perDay:1,per:"4,5 mg",daily:"4,5 mg / jour",label:"4,5 mg · 1x / jour",slots:["jour"],check:true}]},
+];
+const GROUPS=["Sinus","Général","Protocole LDN"];
+
+const pad=n=>String(n).padStart(2,"0");
+const toKey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fromKey=k=>{const[y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d);};
+const diffDays=(a,b)=>Math.round((fromKey(a)-fromKey(b))/86400000);
+const addDays=(k,n)=>{const d=fromKey(k);d.setDate(d.getDate()+n);return toKey(d);};
+const fmtLong=k=>fromKey(k).toLocaleDateString("fr-BE",{weekday:"long",day:"numeric",month:"long"});
+const fmtDM=k=>fromKey(k).toLocaleDateString("fr-BE",{day:"2-digit",month:"2-digit"});
+const fmtShort=k=>fromKey(k).toLocaleDateString("fr-BE",{day:"numeric",month:"short"});
+const today=()=>toKey(new Date());
+
+function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f;}catch{return f;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+let state=load("t3_state",{});
+let log=load("t3_log",{});
+let cfg=load("t3_cfg",{mode:"taken"});
+let tab="jour", selected=today();
+
+const st=id=>state[id]||{start:null,stop:null};
+const dayLog=(k,id)=>((log[k]||{})[id])||[];
+const item=id=>ITEMS.find(i=>i.id===id);
+
+/* --- verrou LDN : 1 mois apres le debut du traitement --- */
+function refStart(){
+  const ds=ITEMS.filter(i=>!i.delayDays).map(i=>st(i.id).start).filter(Boolean).sort();
+  return ds.length?ds[0]:null;
+}
+function unlockDate(it){const rs=refStart();return rs?addDays(rs,it.delayDays):null;}
+function isLocked(it){
+  if(!it.delayDays) return false;
+  if(st(it.id).start) return false;
+  const u=unlockDate(it);
+  return !u || diffDays(today(),u)<0;
+}
+
+/* --- progression / paliers --- */
+function phaseInfo(it,dateKey){
+  const s=st(it.id);
+  if(!s.start) return {status:isLocked(it)?"locked":"idle"};
+  if(diffDays(dateKey,s.start)<0) return {status:"before"};
+  if(s.stop&&diffDays(dateKey,s.stop)>0) return {status:"stopped"};
+  let n;
+  if(cfg.mode==="calendar") n=diffDays(dateKey,s.start)+1;
+  else{ n=1;
+    for(let k=s.start;diffDays(dateKey,k)>0;k=addDays(k,1)){
+      const a=dayLog(k,it.id); if(a.length&&a.some(x=>x)) n++; } }
+  let rem=n,idx=0;
+  for(;idx<it.phases.length;idx++){
+    const p=it.phases[idx];
+    if(p.days===null) break;
+    if(rem<=p.days) break;
+    rem-=p.days;
+  }
+  if(idx>=it.phases.length) return {status:"done",totalDay:n};
+  return {status:"active",phase:it.phases[idx],phaseIdx:idx,dayInPhase:rem,totalDay:n};
+}
+const totalDays=it=>{let t=0;for(const p of it.phases){if(p.days===null)return null;t+=p.days;}return t;};
+const plannedOn=(it,k)=>{const p=phaseInfo(it,k);return p.status==="active"?p.phase.perDay:0;};
+const takenOn=(it,k)=>dayLog(k,it.id).filter(Boolean).length;
+function dayTotals(k){let p=0,t=0;for(const it of ITEMS){const pl=plannedOn(it,k);p+=pl;t+=Math.min(takenOn(it,k),pl);}return{planned:p,taken:t};}
+function adherence(d){let p=0,t=0;for(let i=0;i<d;i++){const x=dayTotals(addDays(today(),-i));p+=x.planned;t+=x.taken;}return p?Math.round(t/p*100):null;}
+function streak(){let n=0;
+  for(let i=1;i<=180;i++){const x=dayTotals(addDays(today(),-i));if(!x.planned)continue;if(x.taken>=x.planned)n++;else break;}
+  const t=dayTotals(today()); if(t.planned&&t.taken>=t.planned)n++; return n;}
+function missedDays(w){const o=[];for(let i=1;i<=w;i++){const k=addDays(today(),-i);const x=dayTotals(k);
+  if(x.planned&&x.taken<x.planned)o.push({k,miss:x.planned-x.taken});}return o;}
+function endDateOf(it){const s=st(it.id),tot=totalDays(it);
+  if(!s.start||!tot)return null;
+  if(cfg.mode==="calendar")return addDays(s.start,tot-1);
+  const pi=phaseInfo(it,today()); const done=pi.totalDay||1;
+  return addDays(today(),Math.max(0,tot-done));}
+
+/* ================= RENDER ================= */
+function render(){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.tab===tab));
+  document.getElementById("view").innerHTML=
+    tab==="jour"?viewJour():tab==="suivi"?viewSuivi():viewPlan();
+  bind();
+}
+
+function viewJour(){
+  const tk=today(), past=diffDays(selected,tk)<0, fut=diffDays(selected,tk)>0;
+  const d=dayTotals(selected);
+  const miss=missedDays(7);
+  let cards="";
+  for(const g of GROUPS){
+    const its=ITEMS.filter(i=>i.group===g&&["active"].includes(phaseInfo(i,selected).status));
+    if(!its.length)continue;
+    cards+=`<div class="groupTitle">${g}</div>`+its.map(i=>cardJour(i,fut)).join("");
+  }
+  if(!cards) cards=`<div class="empty">Aucun médicament actif ce jour-là.<br/>Va dans l'onglet <b>Traitement</b> pour démarrer un produit.</div>`;
+  return `
+  <div class="dateNav">
+    <button class="navBtn" data-nav="-1">‹</button>
+    <button class="dateLabel" data-nav="0"><span>${fmtLong(selected)}</span>
+      ${selected===tk?`<span class="pill pillToday">aujourd'hui</span>`
+        :past?`<span class="pill pillPast">rattrapage</span>`
+        :`<span class="pill pillFut">à venir</span>`}</button>
+    <button class="navBtn" data-nav="1">›</button>
+  </div>
+  <div class="bar"><div class="barTrack"><div class="barFill" style="width:${d.planned?Math.round(d.taken/d.planned*100):0}%"></div></div>
+    <span class="barTxt">${d.planned?`${d.taken}/${d.planned} prises`:"—"}</span></div>
+  ${(miss.length&&selected===tk)?`<div class="catchup">
+     <div class="catchupTitle">${miss.length} jour${miss.length>1?"s":""} incomplet${miss.length>1?"s":""} cette semaine</div>
+     <div class="hint" style="margin-top:3px">Touche un jour pour le compléter.</div>
+     <div class="catchupDays">${miss.map(m=>`<button class="cDay" data-goto="${m.k}">${fmtShort(m.k)} · −${m.miss}</button>`).join("")}</div></div>`:""}
+  ${cards}
+  <footer>Outil de suivi personnel · ne remplace pas l'avis du Dr de Pret.</footer>`;
+}
+
+function cardJour(it,future){
+  const pi=phaseInfo(it,selected), p=pi.phase, arr=dayLog(selected,it.id);
+  const multi=it.phases.length>1;
+  const doses=p.slots.map((sl,i)=>{
+    const on=!!arr[i];
+    return `<button class="dose ${on?"on":""}" data-dose="${it.id}:${i}" ${future?"disabled":""}>
+      <span class="box">${on?"✓":""}</span><span>${sl}</span>
+      <span class="doseQty">${p.per}</span></button>`;}).join("");
+  const badges=[
+    multi?`<span class="badge">Palier ${pi.phaseIdx+1}/${it.phases.length}</span>`:"",
+    p.days?`<span class="badge g">jour ${pi.dayInPhase}/${p.days}</span>`:`<span class="badge g">jour ${pi.totalDay} · continu</span>`,
+    p.check?`<span class="badge r">à confirmer</span>`:""
+  ].join("");
+  return `<div class="card">
+    <div class="cardTop"><span class="no on">${it.n}</span>
+      <div style="flex:1;min-width:0">
+        <div class="cardName">${it.name}</div>
+        <div class="cardSub">${p.label}${it.sub?` · <span class="tag">${it.sub}</span>`:""}</div>
+        <div class="badges">${badges}</div>
+      </div>
+      <button class="menuBtn" data-menu="${it.id}">⋯</button></div>
+    <div class="doses">${doses}</div>
+    <div class="dailyTot">total du jour : ${p.daily}</div>
+  </div>`;
+}
+
+function viewSuivi(){
+  const a7=adherence(7),a30=adherence(30),d=dayTotals(today()),s=streak();
+  let bars="";
+  for(let i=13;i>=0;i--){const k=addDays(today(),-i),t=dayTotals(k);
+    const r=t.planned?t.taken/t.planned:0;
+    bars+=`<div class="sparkBar ${!t.planned?"":r>=1?"f":r>0?"p":""}" style="height:${t.planned?Math.max(12,r*100):8}%"></div>`;}
+  const rows=ITEMS.map(it=>{
+    const s2=st(it.id);
+    if(!s2.start)return `<div class="statRow"><span class="no">${it.n}</span><span class="statName">${it.name}</span><span class="statVal" style="color:var(--muted)">—</span></div>`;
+    let p=0,t=0;
+    for(let k=s2.start;diffDays(today(),k)>=0;k=addDays(k,1)){const pl=plannedOn(it,k);p+=pl;t+=Math.min(takenOn(it,k),pl);}
+    const pct=p?Math.round(t/p*100):null;
+    const col=pct===null?"var(--muted)":pct>=90?"var(--teal)":pct>=70?"var(--amber)":"var(--red)";
+    const pi=phaseInfo(it,today());
+    const ex=pi.status==="active"?` · j${pi.totalDay}`:pi.status==="done"?" · terminé":pi.status==="stopped"?" · arrêté":"";
+    return `<div class="statRow"><span class="no">${it.n}</span>
+      <span class="statName">${it.name}${ex}</span><span class="statVal" style="color:${col}">${pct===null?"—":pct+"%"}</span></div>`;}).join("");
+  const m7=missedDays(7).reduce((a,b)=>a+b.miss,0), m30=missedDays(30).reduce((a,b)=>a+b.miss,0);
+  return `
+  <div class="kpis">
+    <div class="kpi dark"><div class="kpiLabel">Aujourd'hui</div>
+      <div class="kpiVal">${d.planned?d.taken+"/"+d.planned:"—"}</div>
+      <div class="kpiSub">${d.planned?"prises prévues":"rien d'actif"}</div></div>
+    <div class="kpi"><div class="kpiLabel">Série</div>
+      <div class="kpiVal" style="color:var(--teal)">${s}</div>
+      <div class="kpiSub">jour${s>1?"s":""} complet${s>1?"s":""} d'affilée</div></div>
+    <div class="kpi"><div class="kpiLabel">Adhérence 7 j</div>
+      <div class="kpiVal">${a7===null?"—":a7+"%"}</div><div class="spark">${bars}</div></div>
+    <div class="kpi"><div class="kpiLabel">Adhérence 30 j</div>
+      <div class="kpiVal">${a30===null?"—":a30+"%"}</div><div class="kpiSub">14 derniers jours ci-contre</div></div>
+    <div class="kpi"><div class="kpiLabel">Prises manquées 7 j</div><div class="kpiVal">${m7}</div></div>
+    <div class="kpi"><div class="kpiLabel">Prises manquées 30 j</div><div class="kpiVal">${m30}</div></div>
+  </div>
+  <div class="sectionTitle">Adhérence par produit</div>
+  <div class="listBox">${rows}</div>
+  <div class="hint" style="margin-top:9px">Comparaison des prises cochées aux prises prévues, depuis la date de début de chaque produit. «&nbsp;—&nbsp;» = pas encore démarré.</div>
+  <footer>Outil de suivi personnel · ne remplace pas l'avis du Dr de Pret.</footer>`;
+}
+
+function viewPlan(){
+  let out="";
+  for(const g of GROUPS){
+    out+=`<div class="groupTitle">${g}</div>`;
+    for(const it of ITEMS.filter(i=>i.group===g)) out+=cardPlan(it);
+  }
+  return out+`<footer>Chaque produit a sa propre date de début.<br/>Tu peux en démarrer un aujourd'hui et un autre plus tard.</footer>`;
+}
+
+function cardPlan(it){
+  const s=st(it.id), pi=phaseInfo(it,today()), tot=totalDays(it);
+  const head=(cls,badges)=>`<div class="cardTop"><span class="no ${cls}">${it.n}</span>
+    <div style="flex:1;min-width:0"><div class="cardName">${it.name}</div>
+      <div class="cardSub">${it.phases.map(p=>p.label).join(" → ")}${it.sub?` · <span class="tag">${it.sub}</span>`:""}</div>
+      <div class="badges">${badges}</div></div>
+    <button class="menuBtn" data-menu="${it.id}">⋯</button></div>`;
+
+  if(pi.status==="locked"){
+    const u=unlockDate(it);
+    const txt=u?`Déverrouillé le ${fmtDM(u)} · dans ${diffDays(u,today())} j`
+               :`Démarre d'abord un médicament du traitement`;
+    return `<div class="card locked">${head("",`<span class="badge g">après 1 mois</span>`)}
+      <div class="lockBox">🔒 ${txt}</div></div>`;
+  }
+  if(pi.status==="idle"){
+    return `<div class="card off">${head("",`<span class="badge g">${tot?tot+" jours":"sans fin"}</span>`)}
+      <button class="startBtn" data-menu="${it.id}">Démarrer ce médicament</button></div>`;
+  }
+  if(pi.status==="before")
+    return `<div class="card off">${head("",`<span class="badge g">commence le ${fmtDM(s.start)}</span>`)}</div>`;
+  if(pi.status==="stopped")
+    return `<div class="card off">${head("fin",`<span class="badge a">arrêté le ${fmtDM(s.stop)}</span>`)}</div>`;
+  if(pi.status==="done")
+    return `<div class="card off">${head("fin",`<span class="badge a">terminé${tot?` · ${tot} jours`:""}</span>`)}</div>`;
+
+  const p=pi.phase, pct=tot?Math.min(100,Math.round(pi.totalDay/tot*100)):0;
+  const end=endDateOf(it);
+  const badges=[`<span class="badge d">${p.daily}</span>`,
+    p.days?`<span class="badge g">palier ${pi.phaseIdx+1} · j${pi.dayInPhase}/${p.days}</span>`:`<span class="badge g">continu</span>`,
+    end?`<span class="badge a">fin ${fmtDM(end)}</span>`:""].join("");
+  return `<div class="card">${head("on",badges)}
+    ${tot?`<div class="itemBar"><div class="itemBarFill" style="width:${pct}%"></div></div>`:""}</div>`;
+}
+
+/* ================= SHEETS ================= */
+function closeModal(){document.getElementById("modal").innerHTML="";}
+function sheet(html){
+  document.getElementById("modal").innerHTML=`<div class="scrim" id="scrim"><div class="sheet">${html}</div></div>`;
+  document.getElementById("scrim").onclick=e=>{if(e.target.id==="scrim")closeModal();};
+  const c=document.getElementById("sClose"); if(c)c.onclick=closeModal;
+}
+function openItem(id){
+  const it=item(id), s=st(id), pi=phaseInfo(it,today()), tot=totalDays(it);
+  if(pi.status==="locked"){
+    const u=unlockDate(it);
+    sheet(`<div class="sheetTitle">${it.n}. ${it.name}</div>
+      <div class="sheetSub">Ce protocole se débute 1 mois après le début du traitement.</div>
+      <div class="row"><div class="lockBox">🔒 ${u?`Déverrouillé le ${fmtDM(u)} (dans ${diffDays(u,today())} jours)`:"Démarre d'abord un autre médicament"}</div>
+      <span class="hint">La date se calcule à partir du premier médicament que tu as démarré${refStart()?` (${fmtDM(refStart())})`:""}. Si le Dr de Pret te dit de commencer plus tôt ou plus tard, préviens-moi et j'ajuste.</span></div>
+      <button class="btn ghost" id="sClose" style="margin-top:14px">Fermer</button>`);
+    return;
+  }
+  const phases=it.phases.map((p,i)=>{
+    const cls=pi.status==="active"?(i===pi.phaseIdx?"now":i<pi.phaseIdx?"past":""):"";
+    return `<div class="phaseRow ${cls}"><span class="phaseNum">${i+1}</span>
+      <span class="phaseTxt">${p.label}<br/><span style="color:var(--muted);font-size:10.5px">${p.daily}</span></span>
+      <span class="phaseDur">${p.days?p.days+" j":"sans fin"}</span></div>`;}).join("");
+  const started=!!s.start, over=["done","stopped"].includes(pi.status);
+  const minDate=it.delayDays&&unlockDate(it)?`min="${unlockDate(it)}"`:"";
+  sheet(`
+    <div class="sheetTitle">${it.n}. ${it.name}</div>
+    <div class="sheetSub">${it.sub||""}${tot?` · ${tot} jours au total`:" · sans fin prévue"}</div>
+    <div class="listBox">${phases}</div>
+    <div class="row"><span class="rowLabel">Date de début</span>
+      <input type="date" id="sStart" ${minDate} value="${s.start||today()}" />
+      <span class="hint">Le jour où tu commences réellement ce produit.</span></div>
+    <div class="row"><div class="btnRow">
+      <button class="btn primary" id="sSave">${started?"Enregistrer":"Démarrer"}</button>
+      ${started&&!over?`<button class="btn danger" id="sStop">Terminer maintenant</button>`:""}</div>
+      ${started?`<button class="btn ghost" id="sReset">Réinitialiser ce médicament</button>`:""}</div>
+    <button class="btn ghost" id="sClose" style="margin-top:14px">Fermer</button>`);
+  document.getElementById("sSave").onclick=()=>{
+    const v=document.getElementById("sStart").value; if(!v)return;
+    state[id]={start:v,stop:null}; save("t3_state",state); closeModal(); render();};
+  const stop=document.getElementById("sStop");
+  if(stop)stop.onclick=()=>{state[id]={...s,stop:today()};save("t3_state",state);closeModal();render();};
+  const rs=document.getElementById("sReset");
+  if(rs)rs.onclick=()=>{state[id]={start:null,stop:null};save("t3_state",state);closeModal();render();};
+}
+function openSettings(){
+  sheet(`<div class="sheetTitle">Réglages</div>
+    <div class="row"><span class="rowLabel">Si j'oublie une prise, les paliers…</span>
+      <div class="seg">
+        <button class="segBtn ${cfg.mode==="taken"?"on":""}" data-mode="taken">comptent les jours pris</button>
+        <button class="segBtn ${cfg.mode==="calendar"?"on":""}" data-mode="calendar">suivent le calendrier</button></div>
+      <span class="hint"><b>Jours pris</b> : un jour oublié ne fait pas avancer le palier, tu fais donc le nombre de jours réellement prévu (la fin se décale).<br/>
+        <b>Calendrier</b> : les paliers avancent avec les dates.<br/>
+        À demander au Dr de Pret, surtout pour le LDN.</span></div>
+    <div class="row"><span class="rowLabel">Sauvegarde</span>
+      <div class="btnRow"><button class="btn" id="exp">⤓ Exporter</button><button class="btn" id="imp">⤒ Importer</button></div>
+      <input type="file" id="impFile" accept="application/json" style="display:none" />
+      <span class="hint">Les données restent sur ton téléphone. Effacer les données de site dans Safari ou supprimer l'app efface l'historique.</span></div>
+    <div class="row"><span class="rowLabel">Zone sensible</span>
+      <button class="btn danger" id="wipe">Tout effacer</button></div>
+    <button class="btn ghost" id="sClose" style="margin-top:14px">Fermer</button>`);
+  document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{cfg.mode=b.dataset.mode;save("t3_cfg",cfg);openSettings();render();});
+  document.getElementById("exp").onclick=()=>{
+    const blob=new Blob([JSON.stringify({state,log,cfg,exported:new Date().toISOString()},null,2)],{type:"application/json"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`traitement-backup-${today()}.json`;a.click();};
+  document.getElementById("imp").onclick=()=>document.getElementById("impFile").click();
+  document.getElementById("impFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{const d=JSON.parse(r.result);
+      if(d.state)state=d.state;if(d.log)log=d.log;if(d.cfg)cfg=d.cfg;
+      save("t3_state",state);save("t3_log",log);save("t3_cfg",cfg);closeModal();render();alert("Historique restauré.");}
+      catch{alert("Fichier invalide.");}};r.readAsText(f);};
+  document.getElementById("wipe").onclick=()=>{if(confirm("Effacer toutes les données de suivi ? Définitif."))
+    {state={};log={};save("t3_state",state);save("t3_log",log);closeModal();render();}};
+}
+
+/* ================= EVENTS ================= */
+function bind(){
+  document.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>{
+    const n=+b.dataset.nav; selected=n===0?today():addDays(selected,n); render();});
+  document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>{selected=b.dataset.goto;render();});
+  document.querySelectorAll("[data-menu]").forEach(b=>b.onclick=()=>openItem(b.dataset.menu));
+  document.querySelectorAll("[data-dose]").forEach(b=>b.onclick=()=>{
+    if(b.hasAttribute("disabled"))return;
+    const [id,i]=b.dataset.dose.split(":");
+    const it=item(id), pi=phaseInfo(it,selected);
+    if(pi.status!=="active")return;              // termine / arrete => non cochable
+    if(diffDays(selected,today())>0)return;      // futur => non cochable
+    const arr=dayLog(selected,id).slice();
+    while(arr.length<pi.phase.perDay)arr.push(0);
+    arr[+i]=arr[+i]?0:1;
+    log[selected]={...(log[selected]||{}),[id]:arr};
+    save("t3_log",log); render();});
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();});
+document.getElementById("gearBtn").onclick=openSettings;
+document.addEventListener("gesturestart",e=>e.preventDefault());
+document.addEventListener("gesturechange",e=>e.preventDefault());
+let lastTouch=0;
+document.addEventListener("touchend",e=>{const n=Date.now();if(n-lastTouch<=320)e.preventDefault();lastTouch=n;},{passive:false});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){selected=today();render();}});
+render();
+</script>
+</body>
+</html>

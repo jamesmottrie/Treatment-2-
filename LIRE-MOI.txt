@@ -1,0 +1,73 @@
+CURE — suivi de traitement (Dr de Pret, 25/08/26) — Mottrie James
+=================================================================
+
+FICHIERS A METTRE SUR GITHUB (TOUS) :
+  index.html · manifest.json · sw.js
+  icon-192.png · icon-512.png · apple-touch-icon.png
+  splash-1179x2556.png · splash-1290x2796.png · splash-1284x2778.png · splash-1170x2532.png
+  (les splash = ecrans de demarrage, ils suppriment le flash blanc a l'ouverture)
+
+MISE EN LIGNE
+  Nouveau repository (recommande) :
+    github.com > New repository > nom : Traitement-2 > Public > Create
+    Add file > Upload files > glisser les 6 FICHIERS (pas le dossier) > Commit
+    Settings > Pages > Deploy from a branch > main > / (root) > Save
+    Adresse : https://jamesmottrie.github.io/Traitement-2/
+
+IMPORTANT SI TU AVAIS DEJA INSTALLE UNE VERSION
+  Supprime l'ancienne icone de l'ecran d'accueil, rouvre l'adresse dans Safari,
+  puis re-ajoute-la. Sinon iOS garde l'ancien logo et l'ancienne version en cache.
+
+OUVERTURE RAPIDE
+  Le 1er lancement telecharge les fichiers. Ensuite tout est en cache local :
+  l'app s'ouvre sans reseau, avec un ecran de demarrage sombre au lieu du blanc.
+  Puis sur iPhone : ouvrir dans SAFARI > Partager > "Sur l'ecran d'accueil"
+
+LES 3 ONGLETS
+  Aujourd'hui : uniquement les medicaments actifs du jour, a cocher.
+  Suivi       : tous les indicateurs (adherence, serie, oublis, par produit).
+  Traitement  : les 9 medicaments numerotes, leur statut, demarrer / terminer.
+
+NUMEROTATION (identique dans toute l'app)
+  SINUS            1 Lysomucyl 600 mg          15 j
+                   2 Inhalations HE            15 j
+                   3 Pot neti                  15 j
+  GENERAL          4 Multi Vita Boost          2x/j 30 j PUIS 1x/j 30 j
+                   5 PEA (Dynveo)              3x/j 60 j
+                   6 Magnevits Lepivits        3x/j sans fin
+                   7 Apigenin 100 mg           2 cp 2x/j (=4 cp/j) 15 j PUIS 2 cp/j
+                   8 DHA Forte (DEBA)          2x/j 60 j
+  PROTOCOLE LDN    9 Naltrexone                1,5mg 1x/j 10 j
+                                               1,5mg 2x/j 10 j
+                                               4,5mg 60 j
+VERROU LDN
+  Le n°9 reste verrouille (cadenas) jusqu'a 1 mois apres le debut du traitement.
+  La date se calcule sur le PREMIER medicament que tu demarres, et l'app affiche
+  "Deverrouille le JJ/MM · dans X j". Impossible de l'ouvrir avant.
+
+PALIERS AUTOMATIQUES
+  Les produits qui changent de dose le font tout seuls (n°4, 7 et 9).
+  Chaque carte affiche le palier en cours et le total du jour
+  (ex. n°7 : "matin 2 comprimes | soir 2 comprimes", total 4 comprimes / jour).
+
+FIN DE CURE
+  Quand une cure est finie (15 j, 1 mois, 2 mois), le produit disparait de
+  l'onglet Aujourd'hui : les cases ne sont plus cochables. Il passe en "termine"
+  dans l'onglet Traitement. Tu peux aussi arreter avant via "..." > Terminer maintenant.
+
+OUBLIS
+  Reglages (engrenage) > "Si j'oublie une prise, les paliers..."
+    - jours pris  (defaut) : un jour oublie ne fait pas avancer le palier
+    - calendrier           : les paliers avancent avec les dates
+  Un bandeau liste les jours incomplets de la semaine : touche un jour pour le completer.
+  Les jours futurs ne sont pas cochables.
+
+SAUVEGARDE
+  Reglages > Exporter (fichier .json) / Importer. A faire regulierement :
+  effacer les donnees de site dans Safari ou supprimer l'app efface l'historique.
+
+A CONFIRMER AVEC LE DR DE PRET (marque "a confirmer" en rouge dans l'app)
+  - n°7 Apigenin : apres 15 jours, "2/jour" = 2 comprimes par jour. Modelise ici
+    en 1 prise de 2 comprimes. A confirmer si c'est plutot 1 comprime 2x/jour.
+  - n°9 LDN palier 3 : "majorer a 4,5 mg durant 2 mois" modelise en 1x/jour.
+  - Le mode de progression en cas d'oubli, surtout pour le LDN.
