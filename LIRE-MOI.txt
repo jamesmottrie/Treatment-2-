@@ -1,0 +1,52 @@
+TRAITEMENT 25/08/26 — Dr de Pret — Mottrie James
+=================================================
+
+CONTENU
+  index.html, manifest.json, sw.js, icon-192.png, icon-512.png, apple-touch-icon.png
+  -> ce sont les 6 fichiers a mettre sur GitHub.
+
+1) METTRE EN LIGNE (GitHub)
+   Option A — nouveau repository (recommande, garde l'ancien intact) :
+     - github.com > New repository > nom : Traitement-2 > Public > Create
+     - Add file > Upload files > glisser les 6 fichiers (PAS le dossier)
+     - Commit changes
+     - Settings > Pages > Deploy from a branch > main > / (root) > Save
+     - Adresse : https://jamesmottrie.github.io/Traitement-2/
+
+   Option B — reutiliser le repo existant :
+     - dans Treatment-Tracker, cree un dossier "v2" et mets-y les 6 fichiers
+     - adresse : https://jamesmottrie.github.io/Treatment-Tracker/v2/
+
+2) INSTALLER SUR L'IPHONE
+   - Ouvrir l'adresse dans SAFARI
+   - Bouton Partager > "Sur l'ecran d'accueil" > Ajouter
+
+3) PREMIERE UTILISATION
+   - Aucun medicament n'est actif au depart : c'est voulu.
+   - Pour chaque produit que tu as en main : "Demarrer ce medicament",
+     choisis la date de debut reelle, puis Demarrer.
+   - Tu peux demarrer les autres plus tard, chacun a sa propre date.
+
+4) TERMINER
+   - "..." sur un produit > "Terminer maintenant" (arret anticipe)
+   - Les cures a duree fixe passent en "terminee" toutes seules a la fin.
+
+5) OUBLIS
+   - Reglages (engrenage) > "Si j'oublie une prise, les paliers..."
+     * jours pris  : un jour oublie ne fait pas avancer le palier
+     * calendrier  : les paliers avancent avec les dates
+   - Un bandeau liste les jours incomplets de la semaine : touche un jour
+     pour revenir dessus et cocher ce qui manque.
+
+6) SAUVEGARDE
+   - Reglages > Exporter : telecharge un fichier .json avec tout l'historique.
+   - Reglages > Importer : restaure ce fichier (nouveau telephone, etc.)
+   - A faire regulierement : effacer les donnees de site dans Safari ou
+     supprimer l'app efface l'historique.
+
+A CONFIRMER AVEC LE DR DE PRET (marque "a confirmer" dans l'app)
+   - Apigenin : "2 comprimes 2x/jour 15 jours puis 2/jour" — apres 15 jours,
+     est-ce 2 comprimes en 1 prise, ou 1 comprime 2x/jour ? Modelise ici en
+     1 prise de 2 comprimes.
+   - LDN palier 3 : "majorer a 4,5 mg durant 2 mois" — modelise en 1x/jour.
+   - Mode de progression en cas d'oubli (surtout pour le LDN).

@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Traitement" />
+<meta name="theme-color" content="#1A262E" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<title>Traitement · 25/08/26</title>
+<style>
+:root{
+  --bg:#F0F2F1; --card:#fff; --ink:#1A262E; --teal:#2A9D8F; --tealSoft:#E1F0EE;
+  --amber:#E9A848; --amberSoft:#FBF0DE; --muted:#78878F; --line:#DDE4E3; --red:#C4553D; --redSoft:#F9E7E3;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  padding:max(16px,env(safe-area-inset-top)) 14px calc(48px + env(safe-area-inset-bottom));
+  max-width:540px;margin:0 auto;min-height:100vh;touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;overscroll-behavior-y:contain}
+input,textarea{-webkit-user-select:text;user-select:text;font-size:16px}
+button{font-family:inherit;cursor:pointer;font-size:inherit}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.kicker{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--teal);font-weight:700}
+h1{font-size:24px;margin:2px 0 0;font-weight:700;letter-spacing:-.4px}
+.iconBtn{background:var(--card);border:1px solid var(--line);border-radius:12px;width:40px;height:40px;font-size:17px;color:var(--muted);flex:0 0 auto}
+.dateNav{display:flex;align-items:center;gap:7px;margin-top:14px}
+.navBtn{flex:0 0 42px;height:44px;font-size:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--teal)}
+.dateLabel{flex:1;height:44px;background:var(--card);border:1px solid var(--line);border-radius:12px;font-size:13.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:7px;text-transform:capitalize;overflow:hidden}
+.pill{font-size:9.5px;padding:2px 7px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.pillToday{background:var(--tealSoft);color:var(--teal)}
+.pillPast{background:var(--amberSoft);color:var(--amber)}
+
+/* KPI grid */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 12px}
+.kpi.dark{background:var(--ink);border-color:var(--ink)}
+.kpiLabel{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi.dark .kpiLabel{color:#8FA3AC}
+.kpiVal{font-size:25px;font-weight:800;letter-spacing:-1px;margin-top:3px;line-height:1}
+.kpi.dark .kpiVal{color:var(--amber)}
+.kpiSub{font-size:10.5px;color:var(--muted);margin-top:3px}
+.kpi.dark .kpiSub{color:#8FA3AC}
+.spark{display:flex;align-items:flex-end;gap:3px;height:26px;margin-top:6px}
+.sparkBar{flex:1;background:var(--tealSoft);border-radius:2px;min-height:2px}
+.sparkBar.f{background:var(--teal)}
+.sparkBar.p{background:var(--amber)}
+.sparkBar.z{background:var(--line)}
+
+/* progress */
+.progressWrap{display:flex;align-items:center;gap:9px;margin:14px 2px 10px}
+.progressBar{flex:1;height:8px;background:var(--line);border-radius:20px;overflow:hidden}
+.progressFill{height:100%;background:var(--teal);border-radius:20px;transition:width .25s}
+.progressTxt{font-size:12.5px;font-weight:700;color:var(--teal);min-width:52px;text-align:right}
+
+/* catch-up banner */
+.catchup{background:var(--amberSoft);border:1px solid #EFD9B4;border-radius:14px;padding:12px 13px;margin-bottom:10px}
+.catchupTitle{font-size:12.5px;font-weight:700;color:#8A5F1C}
+.catchupDays{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.cDay{background:#fff;border:1px solid #EFD9B4;border-radius:9px;padding:6px 9px;font-size:11.5px;font-weight:600;color:#8A5F1C}
+
+/* groups + cards */
+.groupTitle{font-size:10.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);font-weight:700;margin:16px 2px 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:9px}
+.card.off{opacity:.5}
+.cardTop{display:flex;gap:10px;align-items:flex-start}
+.dot{flex:0 0 8px;height:8px;border-radius:50%;background:var(--line);margin-top:6px}
+.dot.on{background:var(--teal)}
+.dot.fin{background:var(--amber)}
+.cardName{font-size:14px;font-weight:650;line-height:1.28}
+.cardSub{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.tag{font-style:italic}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.badge{font-size:10.5px;font-weight:650;padding:2.5px 8px;border-radius:20px;background:var(--tealSoft);color:var(--teal)}
+.badge.g{background:#EEF1F0;color:var(--muted)}
+.badge.a{background:var(--amberSoft);color:#8A5F1C}
+.badge.r{background:var(--redSoft);color:var(--red)}
+.menuBtn{margin-left:auto;flex:0 0 30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:15px;line-height:1}
+.doses{display:flex;gap:7px;margin-top:11px}
+.dose{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 0;border-radius:11px;border:1px solid var(--line);background:var(--bg);font-size:12.5px;font-weight:650;color:var(--muted);text-transform:capitalize;transition:background .12s,color .12s}
+.dose.on{background:var(--tealSoft);border-color:var(--teal);color:var(--teal)}
+.dose:active{transform:scale(.97)}
+.box{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:800}
+.dose.on .box{background:var(--teal);border-color:var(--teal)}
+.startBtn{width:100%;margin-top:11px;padding:11px 0;border-radius:11px;border:1px dashed var(--teal);background:var(--tealSoft);color:var(--teal);font-weight:700;font-size:12.5px}
+.finNote{font-size:11.5px;color:var(--muted);margin-top:10px}
+.itemBar{height:5px;background:var(--line);border-radius:20px;overflow:hidden;margin-top:10px}
+.itemBarFill{height:100%;background:var(--teal);border-radius:20px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(20,30,36,.45);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sheet{background:var(--bg);width:100%;max-width:540px;border-radius:20px 20px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto}
+.sheetTitle{font-size:16px;font-weight:700;line-height:1.3}
+.sheetSub{font-size:12px;color:var(--muted);margin-top:4px}
+.row{display:flex;flex-direction:column;gap:7px;margin-top:16px}
+.rowLabel{font-size:12.5px;font-weight:650}
+input[type=date]{padding:11px 12px;border:1px solid var(--line);border-radius:11px;font-family:inherit;background:var(--card);color:var(--ink);width:100%}
+.btn{padding:12px;border-radius:11px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:650;color:var(--ink);width:100%}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.danger{background:var(--redSoft);border-color:#EBC9C0;color:var(--red)}
+.btn.ghost{background:transparent}
+.btnRow{display:flex;gap:8px}
+.btnRow .btn{flex:1}
+.hint{font-size:11px;color:var(--muted);line-height:1.45}
+.seg{display:flex;gap:7px}
+.segBtn{flex:1;padding:10px 0;border:1px solid var(--line);border-radius:11px;background:var(--card);font-size:12.5px;font-weight:650;color:var(--muted)}
+.segBtn.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.phaseList{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:8px}
+.phaseRow{display:flex;align-items:center;gap:9px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:12px}
+.phaseRow:last-child{border-bottom:none}
+.phaseRow.now{background:var(--tealSoft)}
+.phaseNum{flex:0 0 20px;height:20px;border-radius:6px;background:var(--bg);color:var(--muted);font-weight:700;font-size:10.5px;display:flex;align-items:center;justify-content:center}
+.phaseRow.now .phaseNum{background:var(--teal);color:#fff}
+.phaseTxt{flex:1}
+.phaseDur{color:var(--muted);font-size:11px}
+footer{margin-top:22px;font-size:10.5px;color:var(--muted);text-align:center;line-height:1.6}
+.statRow{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);font-size:12.5px}
+.statRow:last-child{border-bottom:none}
+.statName{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:10px}
+.statVal{font-weight:700}
+</style>
+</head>
+<body>
+
+<header>
+  <div><div class="kicker">Traitement · Dr de Pret · 25/08/26</div><h1>Mottrie James</h1></div>
+  <button class="iconBtn" id="statsBtn" aria-label="Statistiques">📊</button>
+  <button class="iconBtn" id="gearBtn" aria-label="Réglages">⚙</button>
+</header>
+
+<div class="dateNav">
+  <button class="navBtn" id="prev">‹</button>
+  <button class="dateLabel" id="dateLabel"></button>
+  <button class="navBtn" id="next">›</button>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="progressWrap">
+  <div class="progressBar"><div class="progressFill" id="fill"></div></div>
+  <span class="progressTxt" id="progressTxt"></span>
+</div>
+
+<div id="catchup"></div>
+<div id="list"></div>
+
+<footer>
+  Outil de suivi personnel · ne remplace pas l'avis du Dr de Pret.<br/>
+  Sauvegarde régulièrement via ⚙ &gt; Exporter.
+</footer>
+
+<div id="modal"></div>
+
+<script>
+/* ---------------- Ordonnance du 25/08/26 ----------------
+   phases: séquence de paliers. days=null => sans fin prévue.
+   perDay: nombre de prises par jour. slots: libellés des prises.  */
+const ITEMS=[
+ {id:"lyso",group:"Sinus",name:"Lysomucyl 600 mg",sub:"1 matin + 1 midi",
+  phases:[{days:15,perDay:2,label:"1 matin + 1 midi",slots:["matin","midi"]}]},
+ {id:"inhal",group:"Sinus",name:"Inhalations HE",sub:"menthe poivrée · eucalyptus globuleux · lavande vraie",
+  phases:[{days:15,perDay:2,label:"2x / jour",slots:["matin","soir"]}]},
+ {id:"neti",group:"Sinus",name:"Pot neti",sub:"liquide physiologique · 1x par narine",
+  phases:[{days:15,perDay:2,label:"2x / jour",slots:["matin","soir"]}]},
+
+ {id:"mvb",group:"Général",name:"Multi Vita Boost (Nutrilogics)",sub:"soutien des mitochondries",
+  phases:[{days:30,perDay:2,label:"2x / jour",slots:["matin","soir"]},
+          {days:30,perDay:1,label:"1x / jour",slots:["jour"]}]},
+ {id:"pea",group:"Général",name:"PEA (Dynveo)",sub:"endocannabinoïde",
+  phases:[{days:60,perDay:3,label:"3x / jour",slots:["matin","midi","soir"]}]},
+ {id:"mag",group:"Général",name:"Magnevits Lepivits",sub:"",
+  phases:[{days:null,perDay:3,label:"3x / jour",slots:["matin","midi","soir"]}]},
+ {id:"api",group:"Général",name:"Apigenin 100 mg (Cupplement)",sub:"extrait de camomille",
+  phases:[{days:15,perDay:2,label:"2 comprimés · 2x / jour",slots:["matin","soir"]},
+          {days:null,perDay:1,label:"2 comprimés · 1x / jour",slots:["jour"],check:true}]},
+ {id:"dha",group:"Général",name:"DHA Forte (DEBA)",sub:"oméga-3 à tropisme cérébral",
+  phases:[{days:60,perDay:2,label:"2x / jour",slots:["matin","soir"]}]},
+
+ {id:"ldn",group:"Protocole LDN",name:"Naltrexone (LDN)",sub:"à débuter après 1 mois",delayDays:30,
+  phases:[{days:10,perDay:1,label:"1,5 mg · 1x / jour",slots:["jour"]},
+          {days:10,perDay:2,label:"1,5 mg · 2x / jour",slots:["matin","soir"]},
+          {days:60,perDay:1,label:"4,5 mg · 1x / jour",slots:["jour"],check:true}]},
+];
+const GROUPS=["Sinus","Général","Protocole LDN"];
+
+/* ---------------- dates ---------------- */
+const pad=n=>String(n).padStart(2,"0");
+const toKey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fromKey=k=>{const[y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d);};
+const diffDays=(a,b)=>Math.round((fromKey(a)-fromKey(b))/86400000);
+const addDays=(k,n)=>{const d=fromKey(k);d.setDate(d.getDate()+n);return toKey(d);};
+const fmtLong=k=>fromKey(k).toLocaleDateString("fr-BE",{weekday:"long",day:"numeric",month:"long"});
+const fmtDM=k=>fromKey(k).toLocaleDateString("fr-BE",{day:"2-digit",month:"2-digit"});
+const fmtShort=k=>fromKey(k).toLocaleDateString("fr-BE",{day:"numeric",month:"short"});
+const today=()=>toKey(new Date());
+
+/* ---------------- state ---------------- */
+function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f;}catch{return f;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+let state=load("t2_state",{});      // {itemId:{start:key|null, stop:key|null}}
+let log=load("t2_log",{});          // {dateKey:{itemId:[0,1,...]}}
+let cfg=load("t2_cfg",{mode:"taken"}); // progression: "taken" (jours pris) | "calendar"
+let selected=today();
+let modal=null;
+
+const st=id=>state[id]||{start:null,stop:null};
+const dayLog=(k,id)=>((log[k]||{})[id])||[];
+
+/* progression: quel palier, quel jour */
+function phaseInfo(item,dateKey){
+  const s=st(item.id);
+  if(!s.start) return {status:"idle"};
+  if(diffDays(dateKey,s.start)<0) return {status:"before"};
+  if(s.stop && diffDays(dateKey,s.stop)>0) return {status:"stopped"};
+  // jour de progression
+  let n;
+  if(cfg.mode==="calendar"){
+    n=diffDays(dateKey,s.start)+1;
+  }else{
+    n=1;
+    for(let k=s.start;diffDays(dateKey,k)>0;k=addDays(k,1)){
+      const a=dayLog(k,item.id);
+      if(a.length&&a.some(x=>x)) n++;
+    }
+  }
+  let rem=n,idx=0;
+  for(;idx<item.phases.length;idx++){
+    const p=item.phases[idx];
+    if(p.days===null) break;
+    if(rem<=p.days) break;
+    rem-=p.days;
+  }
+  if(idx>=item.phases.length) return {status:"done",totalDay:n};
+  const p=item.phases[idx];
+  return {status:"active",phase:p,phaseIdx:idx,dayInPhase:rem,totalDay:n};
+}
+function totalDays(item){
+  let t=0;for(const p of item.phases){if(p.days===null)return null;t+=p.days;}return t;
+}
+function plannedOn(item,dateKey){
+  const pi=phaseInfo(item,dateKey);
+  return pi.status==="active"?pi.phase.perDay:0;
+}
+function takenOn(item,dateKey){
+  return dayLog(dateKey,item.id).filter(Boolean).length;
+}
+function dayTotals(dateKey){
+  let p=0,t=0;
+  for(const it of ITEMS){const pl=plannedOn(it,dateKey);p+=pl;t+=Math.min(takenOn(it,dateKey),pl);}
+  return {planned:p,taken:t};
+}
+function adherence(days){
+  const end=today();let p=0,t=0;
+  for(let i=0;i<days;i++){const k=addDays(end,-i);const d=dayTotals(k);p+=d.planned;t+=d.taken;}
+  return p?Math.round(t/p*100):null;
+}
+function streak(){
+  let n=0;
+  for(let i=1;i<=180;i++){
+    const k=addDays(today(),-i);const d=dayTotals(k);
+    if(!d.planned) continue;
+    if(d.taken>=d.planned) n++; else break;
+  }
+  const td=dayTotals(today());
+  if(td.planned&&td.taken>=td.planned) n++;
+  return n;
+}
+function missedDays(win){
+  const out=[];
+  for(let i=1;i<=win;i++){
+    const k=addDays(today(),-i);const d=dayTotals(k);
+    if(d.planned&&d.taken<d.planned) out.push({k,miss:d.planned-d.taken});
+  }
+  return out;
+}
+function anyStarted(){return ITEMS.some(i=>st(i.id).start);}
+function refStart(){
+  const ds=ITEMS.map(i=>st(i.id).start).filter(Boolean).sort();
+  return ds.length?ds[0]:null;
+}
+
+/* ---------------- render ---------------- */
+function render(){
+  const tk=today();
+  const isPast=diffDays(selected,tk)<0, isFut=diffDays(selected,tk)>0;
+  document.getElementById("dateLabel").innerHTML=
+    `<span>${fmtLong(selected)}</span>`+
+    (selected===tk?`<span class="pill pillToday">aujourd'hui</span>`
+      :isPast?`<span class="pill pillPast">rattrapage</span>`:``);
+
+  renderKpis();
+
+  const d=dayTotals(selected);
+  document.getElementById("fill").style.width=(d.planned?Math.round(d.taken/d.planned*100):0)+"%";
+  document.getElementById("progressTxt").textContent=d.planned?`${d.taken}/${d.planned} prises`:"—";
+
+  // catch-up
+  const miss=missedDays(7);
+  document.getElementById("catchup").innerHTML=(miss.length&&selected===tk)?
+    `<div class="catchup"><div class="catchupTitle">${miss.length} jour${miss.length>1?"s":""} incomplet${miss.length>1?"s":""} cette semaine</div>
+      <div class="hint" style="margin-top:4px">Touche un jour pour le compléter. Les paliers ne comptent que les jours réellement pris, donc rien n'est faussé.</div>
+      <div class="catchupDays">${miss.map(m=>`<button class="cDay" data-goto="${m.k}">${fmtShort(m.k)} · −${m.miss}</button>`).join("")}</div></div>`:"";
+
+  // list
+  let html="";
+  for(const g of GROUPS){
+    const its=ITEMS.filter(i=>i.group===g);
+    if(!its.length) continue;
+    html+=`<div class="groupTitle">${g}</div>`;
+    for(const it of its) html+=cardHtml(it);
+  }
+  document.getElementById("list").innerHTML=html;
+  bind();
+}
+
+function renderKpis(){
+  const a7=adherence(7), a30=adherence(30);
+  const d=dayTotals(today());
+  const s=streak();
+  // sparkline 14 j
+  let bars="";
+  for(let i=13;i>=0;i--){
+    const k=addDays(today(),-i);const t=dayTotals(k);
+    const r=t.planned?t.taken/t.planned:0;
+    const cls=!t.planned?"z":r>=1?"f":r>0?"p":"z";
+    bars+=`<div class="sparkBar ${cls}" style="height:${t.planned?Math.max(12,r*100):8}%"></div>`;
+  }
+  document.getElementById("kpis").innerHTML=`
+    <div class="kpi dark">
+      <div class="kpiLabel">Aujourd'hui</div>
+      <div class="kpiVal">${d.planned?d.taken+"/"+d.planned:"—"}</div>
+      <div class="kpiSub">${d.planned?"prises prévues":"aucun traitement actif"}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpiLabel">Série</div>
+      <div class="kpiVal" style="color:var(--teal)">${s}</div>
+      <div class="kpiSub">jour${s>1?"s":""} complet${s>1?"s":""} d'affilée</div>
+    </div>
+    <div class="kpi">
+      <div class="kpiLabel">Adhérence 7 j</div>
+      <div class="kpiVal">${a7===null?"—":a7+"%"}</div>
+      <div class="spark">${bars}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpiLabel">Adhérence 30 j</div>
+      <div class="kpiVal">${a30===null?"—":a30+"%"}</div>
+      <div class="kpiSub">${anyStarted()?"depuis le début":"rien de démarré"}</div>
+    </div>`;
+}
+
+function cardHtml(it){
+  const s=st(it.id), pi=phaseInfo(it,selected);
+  const arr=dayLog(selected,it.id);
+  const tot=totalDays(it);
+
+  if(pi.status==="idle"){
+    let hint="";
+    if(it.delayDays){
+      const rs=refStart();
+      hint=rs?`Départ conseillé : ${fmtDM(addDays(rs,it.delayDays))} (1 mois après le début)`
+              :`À débuter 1 mois après le début du traitement`;
+    }
+    return `<div class="card off">
+      <div class="cardTop"><span class="dot"></span>
+        <div style="flex:1;min-width:0">
+          <div class="cardName">${it.name}</div>
+          <div class="cardSub">${it.phases[0].label}${it.sub?` · <span class="tag">${it.sub}</span>`:``}</div>
+          ${hint?`<div class="badges"><span class="badge g">${hint}</span></div>`:``}
+        </div>
+        <button class="menuBtn" data-menu="${it.id}">⋯</button></div>
+      <button class="startBtn" data-start="${it.id}">Démarrer ce médicament</button></div>`;
+  }
+  if(pi.status==="before"){
+    return `<div class="card off"><div class="cardTop"><span class="dot"></span>
+      <div style="flex:1;min-width:0"><div class="cardName">${it.name}</div>
+      <div class="cardSub">Commence le ${fmtDM(s.start)}</div></div>
+      <button class="menuBtn" data-menu="${it.id}">⋯</button></div></div>`;
+  }
+  if(pi.status==="stopped"||pi.status==="done"){
+    const why=pi.status==="stopped"?`Arrêté le ${fmtDM(s.stop)}`:`Cure terminée${tot?` · ${tot} jours`:""}`;
+    return `<div class="card off"><div class="cardTop"><span class="dot fin"></span>
+      <div style="flex:1;min-width:0"><div class="cardName">${it.name}</div>
+      <div class="badges"><span class="badge a">${why}</span></div></div>
+      <button class="menuBtn" data-menu="${it.id}">⋯</button></div></div>`;
+  }
+
+  const p=pi.phase;
+  const multi=it.phases.length>1;
+  const phaseBadge=multi?`<span class="badge">Palier ${pi.phaseIdx+1}/${it.phases.length} · ${p.label}</span>`:"";
+  const dayBadge=p.days?`<span class="badge g">jour ${pi.dayInPhase}/${p.days}</span>`
+                       :`<span class="badge g">jour ${pi.totalDay} · en continu</span>`;
+  const endBadge=(p.days&&pi.phaseIdx===it.phases.length-1)
+    ?`<span class="badge a">fin prévue ${fmtDM(endDateOf(it))}</span>`:"";
+  const chk=p.check?`<span class="badge r">à confirmer</span>`:"";
+  const pct=tot?Math.min(100,Math.round(pi.totalDay/tot*100)):0;
+
+  const doses=p.slots.map((sl,i)=>{
+    const on=!!arr[i];
+    return `<button class="dose ${on?"on":""}" data-dose="${it.id}:${i}">
+      <span class="box">${on?"✓":""}</span>${sl}</button>`;}).join("");
+
+  return `<div class="card">
+    <div class="cardTop"><span class="dot on"></span>
+      <div style="flex:1;min-width:0">
+        <div class="cardName">${it.name}</div>
+        <div class="cardSub">${multi?"":p.label}${it.sub?`${multi?"":" · "}<span class="tag">${it.sub}</span>`:``}</div>
+        <div class="badges">${phaseBadge}${dayBadge}${endBadge}${chk}</div>
+      </div>
+      <button class="menuBtn" data-menu="${it.id}">⋯</button></div>
+    <div class="doses">${doses}</div>
+    ${tot?`<div class="itemBar"><div class="itemBarFill" style="width:${pct}%"></div></div>`:``}
+  </div>`;
+}
+
+function endDateOf(it){
+  const s=st(it.id);const tot=totalDays(it);
+  if(!s.start||!tot)return null;
+  if(cfg.mode==="calendar") return addDays(s.start,tot-1);
+  // en mode "jours pris", la fin glisse : estimation depuis la progression actuelle
+  const pi=phaseInfo(it,today());
+  const doneDays=pi.totalDay||1;
+  return addDays(today(),Math.max(0,tot-doneDays));
+}
+
+/* ---------------- interactions ---------------- */
+function bind(){
+  document.querySelectorAll("[data-dose]").forEach(b=>b.onclick=()=>{
+    const [id,i]=b.dataset.dose.split(":");
+    const it=ITEMS.find(x=>x.id===id);
+    const pi=phaseInfo(it,selected); if(pi.status!=="active")return;
+    const arr=dayLog(selected,id).slice();
+    while(arr.length<pi.phase.perDay)arr.push(0);
+    arr[+i]=arr[+i]?0:1;
+    log[selected]={...(log[selected]||{}),[id]:arr};
+    save("t2_log",log); render();
+  });
+  document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>openItem(b.dataset.start,true));
+  document.querySelectorAll("[data-menu]").forEach(b=>b.onclick=()=>openItem(b.dataset.menu,false));
+  document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>{selected=b.dataset.goto;render();});
+}
+
+function closeModal(){modal=null;document.getElementById("modal").innerHTML="";}
+function sheet(inner){
+  document.getElementById("modal").innerHTML=`<div class="scrim" id="scrim"><div class="sheet">${inner}</div></div>`;
+  document.getElementById("scrim").onclick=e=>{if(e.target.id==="scrim")closeModal();};
+}
+
+function openItem(id,focusStart){
+  const it=ITEMS.find(x=>x.id===id), s=st(id);
+  const pi=phaseInfo(it,today());
+  const tot=totalDays(it);
+  const phases=it.phases.map((p,i)=>`
+    <div class="phaseRow ${pi.status==="active"&&pi.phaseIdx===i?"now":""}">
+      <span class="phaseNum">${i+1}</span>
+      <span class="phaseTxt">${p.label}${p.check?" (à confirmer)":""}</span>
+      <span class="phaseDur">${p.days?p.days+" j":"sans fin"}</span></div>`).join("");
+  const started=!!s.start;
+  sheet(`
+    <div class="sheetTitle">${it.name}</div>
+    <div class="sheetSub">${it.sub||""}${tot?` · ${tot} jours au total`:" · durée non fixée"}</div>
+    <div class="phaseList">${phases}</div>
+    <div class="row">
+      <span class="rowLabel">Date de début</span>
+      <input type="date" id="sStart" value="${s.start||today()}" />
+      <span class="hint">Mets la date du jour où tu commences réellement ce produit. Chaque médicament a sa propre date.</span>
+    </div>
+    <div class="row">
+      <div class="btnRow">
+        <button class="btn primary" id="sSave">${started?"Enregistrer":"Démarrer"}</button>
+        ${started?`<button class="btn danger" id="sStop">Terminer maintenant</button>`:``}
+      </div>
+      ${started?`<button class="btn ghost" id="sReset">Réinitialiser ce médicament</button>`:``}
+    </div>
+    <button class="btn ghost" id="sClose" style="margin-top:14px">Fermer</button>
+  `);
+  document.getElementById("sSave").onclick=()=>{
+    const v=document.getElementById("sStart").value; if(!v)return;
+    state[id]={...s,start:v,stop:null}; save("t2_state",state); closeModal(); render();
+  };
+  const stop=document.getElementById("sStop");
+  if(stop)stop.onclick=()=>{state[id]={...s,stop:today()};save("t2_state",state);closeModal();render();};
+  const rs=document.getElementById("sReset");
+  if(rs)rs.onclick=()=>{state[id]={start:null,stop:null};save("t2_state",state);closeModal();render();};
+  document.getElementById("sClose").onclick=closeModal;
+}
+
+function openStats(){
+  const rows=ITEMS.map(it=>{
+    const s=st(it.id);
+    if(!s.start) return `<div class="statRow"><span class="statName">${it.name}</span><span class="statVal" style="color:var(--muted)">—</span></div>`;
+    let p=0,t=0;
+    for(let k=s.start;diffDays(today(),k)>=0;k=addDays(k,1)){
+      const pl=plannedOn(it,k); p+=pl; t+=Math.min(takenOn(it,k),pl);
+    }
+    const pct=p?Math.round(t/p*100):null;
+    const col=pct===null?"var(--muted)":pct>=90?"var(--teal)":pct>=70?"var(--amber)":"var(--red)";
+    const pi=phaseInfo(it,today());
+    const extra=pi.status==="active"?` · j${pi.totalDay}`:pi.status==="done"?" · terminé":pi.status==="stopped"?" · arrêté":"";
+    return `<div class="statRow"><span class="statName">${it.name}${extra}</span>
+      <span class="statVal" style="color:${col}">${pct===null?"—":pct+"%"}</span></div>`;
+  }).join("");
+  const m7=missedDays(7).reduce((a,b)=>a+b.miss,0);
+  const m30=missedDays(30).reduce((a,b)=>a+b.miss,0);
+  sheet(`
+    <div class="sheetTitle">Suivi</div>
+    <div class="sheetSub">Adhérence par produit depuis sa date de début</div>
+    <div class="phaseList" style="margin-top:12px">${rows}</div>
+    <div class="kpis" style="margin-top:14px">
+      <div class="kpi"><div class="kpiLabel">Prises manquées 7 j</div><div class="kpiVal">${m7}</div></div>
+      <div class="kpi"><div class="kpiLabel">Prises manquées 30 j</div><div class="kpiVal">${m30}</div></div>
+    </div>
+    <div class="row"><span class="hint">L'adhérence compare les prises cochées aux prises prévues sur la même période. Un produit pas encore démarré affiche «&nbsp;—&nbsp;».</span></div>
+    <button class="btn ghost" id="sClose" style="margin-top:14px">Fermer</button>`);
+  document.getElementById("sClose").onclick=closeModal;
+}
+
+function openSettings(){
+  sheet(`
+    <div class="sheetTitle">Réglages</div>
+    <div class="row">
+      <span class="rowLabel">Si j'oublie une prise, les paliers…</span>
+      <div class="seg">
+        <button class="segBtn ${cfg.mode==="taken"?"on":""}" data-mode="taken">comptent les jours pris</button>
+        <button class="segBtn ${cfg.mode==="calendar"?"on":""}" data-mode="calendar">suivent le calendrier</button>
+      </div>
+      <span class="hint"><b>Jours pris</b> : un jour oublié ne fait pas avancer le palier, donc tu fais bien le nombre de jours prévu (la fin est simplement décalée).<br/>
+      <b>Calendrier</b> : les paliers avancent avec les dates, quoi qu'il arrive.<br/>
+      Lequel choisir dépend du produit : à demander au Dr de Pret, surtout pour le LDN.</span>
+    </div>
+    <div class="row">
+      <span class="rowLabel">Sauvegarde</span>
+      <div class="btnRow">
+        <button class="btn" id="exp">⤓ Exporter</button>
+        <button class="btn" id="imp">⤒ Importer</button>
+      </div>
+      <input type="file" id="impFile" accept="application/json" style="display:none" />
+      <span class="hint">Les données restent sur ton téléphone. Exporte de temps en temps : si tu effaces les données de site dans Safari ou si tu supprimes l'app, l'historique part avec.</span>
+    </div>
+    <div class="row">
+      <span class="rowLabel">Zone sensible</span>
+      <button class="btn danger" id="wipe">Tout effacer</button>
+    </div>
+    <button class="btn ghost" id="sClose" style="margin-top:14px">Fermer</button>`);
+  document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{
+    cfg.mode=b.dataset.mode;save("t2_cfg",cfg);openSettings();render();});
+  document.getElementById("exp").onclick=()=>{
+    const blob=new Blob([JSON.stringify({state,log,cfg,exported:new Date().toISOString()},null,2)],{type:"application/json"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+    a.download=`traitement-backup-${today()}.json`;a.click();};
+  document.getElementById("imp").onclick=()=>document.getElementById("impFile").click();
+  document.getElementById("impFile").onchange=e=>{
+    const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{const d=JSON.parse(r.result);
+      if(d.state)state=d.state; if(d.log)log=d.log; if(d.cfg)cfg=d.cfg;
+      save("t2_state",state);save("t2_log",log);save("t2_cfg",cfg);
+      closeModal();render();alert("Historique restauré.");}catch{alert("Fichier invalide.");}};
+    r.readAsText(f);};
+  document.getElementById("wipe").onclick=()=>{
+    if(confirm("Effacer toutes les données de suivi ? Cette action est définitive."))
+      {state={};log={};save("t2_state",state);save("t2_log",log);closeModal();render();}};
+  document.getElementById("sClose").onclick=closeModal;
+}
+
+document.getElementById("prev").onclick=()=>{selected=addDays(selected,-1);render();};
+document.getElementById("next").onclick=()=>{selected=addDays(selected,1);render();};
+document.getElementById("dateLabel").onclick=()=>{selected=today();render();};
+document.getElementById("gearBtn").onclick=openSettings;
+document.getElementById("statsBtn").onclick=openStats;
+
+/* bloquer le zoom (double-tap / pincement) */
+document.addEventListener("gesturestart",e=>e.preventDefault());
+document.addEventListener("gesturechange",e=>e.preventDefault());
+let lastTouch=0;
+document.addEventListener("touchend",e=>{
+  const n=Date.now(); if(n-lastTouch<=320)e.preventDefault(); lastTouch=n;},{passive:false});
+
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){selected=today();render();}});
+render();
+</script>
+</body>
+</html>
